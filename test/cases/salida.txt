@@ -1,0 +1,94 @@
+REPORTE DEL CLIENTE
+
+PEDIDOS SOLICITADOS
+PRODUCTO                       PROVEEDOR            PRECIO UNITARIO      CANTIDAD    COSTO TOTAL  
+rejillas metalicas             ferretotal                     50.00         30              1500.00 
+tornillos                      ferretotal                      1.00         40                40.00 
+bloques de cemento             ferretotal                     20.00            500             10000.00 
+bloques de cemento             ferreteria2000                 20.00            500             10000.00 
+bloques de cemento             epa                            25.00            500             12500.00 
+cemento                        epa                            90.00           1000             90000.00 
+cemento                        ferreteria2000                120.00            400             48000.00 
+clavos de acero                ferreteria2000                  2.50            400              1000.00 
+clavos de acero                ferretotal                      3.00            250               750.00 
+clavos de acero                epa                             3.00            150               450.00 
+martillo                       ferreteria2000                120.00             10              1200.00 
+cegueta                        ferretotal                    150.00             20              3000.00 
+sierra                         ferreteria2000                900.00             14             12600.00 
+destornilladores               ferretotal                     92.00             20              1840.00 
+pintura de aceite              ferretotal                    350.00             10              3500.00 
+pintura brillo de seda         ferretotal                    450.00             70             31500.00 
+cal                            ferretotal                     30.00             30               900.00 
+pego                           ferreteria2000                 35.00             10               350.00 
+alicate                        ferreteria2000                570.00             12              6840.00 
+
+TOTAL                                                                                        235970.00 
+
+
+------------------------------------------------------
+
+INVENTARIO FINAL FERRETERIA2000
+
+martillo , 290, 120.00 
+alicate , 456, 570.00 
+cegueta , 200, 150.00 
+sierra , 586, 900.00 
+destornilladores , 600, 92.00 
+tuercas , 650, 60.00 
+bloques de cemento , 0, 20.00 
+pintura de aceite , 700, 350.00 
+bombillos 100vatios , 200, 80.00 
+pintura brillo de seda , 220, 450.00 
+rejillas metalicas , 300, 50.00 
+llave de paso , 500, 110.00 
+tornillos , 4000, 1.00 
+cemento , 100, 120.00 
+clavos de acero , 0, 2.50 
+pego , 240, 35.00 
+
+------------------------------------------------------
+
+INVENTARIO FINAL FERRETOTAL
+
+alicate , 480, 580.00 
+cegueta , 180, 150.00 
+sierra , 400, 1000.00 
+destornilladores , 580, 92.00 
+pintura de aceite , 690, 350.00 
+bombillos 100vatios , 200, 80.00 
+pintura brillo de seda , 150, 450.00 
+rejillas metalicas , 270, 50.00 
+llave de paso , 500, 110.00 
+tornillos , 3960, 1.00 
+tuercas , 650, 60.00 
+bloques de cemento , 0, 20.00 
+cemento , 200, 120.00 
+clavos de acero , 0, 3.00 
+martillo , 100, 120.00 
+cal , 70, 30.00 
+pego , 250, 40.00 
+
+
+------------------------------------------------------
+
+INVENTARIO FINAL epa
+
+bloques de cemento , 0, 25.00 
+alicate , 900, 600.00 
+cegueta , 200, 170.00 
+sierra , 400, 1000.00 
+cemento , 0, 90.00 
+clavos de acero , 0, 3.00 
+martillo , 100, 120.00 
+destornilladores , 600, 92.00 
+pintura de aceite , 700, 350.00 
+bombillos 100vatios , 300, 70.00 
+pintura brillo de seda , 220, 450.00 
+rejillas metalicas , 300, 50.00 
+llave de paso , 500, 110.00 
+tornillos , 4000, 1.00 
+tuercas , 650, 60.00 
+tela metalica , 1000, 220.00 
+
+
+

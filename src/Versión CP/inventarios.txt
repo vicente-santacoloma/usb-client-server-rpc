@@ -1,0 +1,4 @@
+Tornillo & 0 & 0.020000
+Martillo & 0 & 5.000000
+Tubo & 0 & 8.000000
+Bombillo & 0 & 1.000000

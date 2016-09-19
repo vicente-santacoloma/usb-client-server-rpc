@@ -1,0 +1,18 @@
+Archivos utilizados para la correccion del Proyecto 1
+
+Utiliza tres servidores (proveedores): Ferretotal, Epa y Ferreteria2000
+Para cada archivo de entrada (proveedores, pedidos e inventario) hay dos versiones,
+una con espacios y & entre campos, y otro sin espacios.
+
+Los archivos proveedores usan por supuesto tres servidores. Unas versiones 
+(proveedores*_local) levantan los 3 servidores (ademas del cliente) en localhost.
+
+El archivo salidad.txt muestra un ejemplo de la salida del cliente y de los servidores. Hay 
+varias salidas aceptables porque hay articulos con el mismo precio en varios proveedores, y cualquier combinacion que de el mejor precio es aceptable.
+
+- Mireya Morales
+- Miguel Torrealba
+- Carlos Figueira
+Noviembre 2012
+
+

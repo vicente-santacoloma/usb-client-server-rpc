@@ -1,0 +1,348 @@
+
+<!-- saved from url=(0065)http://ldc.usb.ve/~figueira/cursos/lab-redes/Proyectos/Proyecto2/ -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Type" content="text/html">
+<title>2do Proyecto: Cliente-Servidor con RPC</title>
+</head>
+<body bgcolor="#f6fffa" link="#0000ff" vlink="#800080">
+
+<h1 align="CENTER">2do Proyecto: Cliente-Servidor con RPC (12%)</h1>
+
+<h2>Descripción general</h2>
+
+El objetivo de este proyecto es que el estudiante maneje los conceptos
+básicos del desarrollo de aplicaciones Cliente-Servidor utilizando el
+paradigma de <i>Llamada a procedimientos remotos</i> (RPC).
+
+<p> El proyecto se basa en el Proyecto 1, <i>Sistema de ayuda de
+Ferretería La Cadena</i>, <a href="http://ldc.usb.ve/~figueira/cursos/lab-redes/Proyectos/Proyecto2/#Proyecto1sockets">incluido
+abajo</a>. Implementará únicamente el nivel avanzado, que hace la
+consulta y realiza el pedido. Tendrá dos versiones:
+</p><dl>
+  <dt>Versión <em>Cliente Pesado</em> (CP) (<b>7 puntos</b>)
+  </dt><dd> Consiste en una implementación del nivel avanzado del sistema
+      del proyecto 1, pero en lugar de usar <em>sockets</em> para la
+      comunicación, tendrá llamadas a procedimientos remotos.
+  </dd><dt>Versión <em>Cliente Ligero</em> (CL) (<b>5 puntos</b>)
+  </dt><dd> Se creará un componente adicional, el <em>Intermediario</em>,
+      que relevará al cliente de las tareas de consultar a los
+      proveedores, evaluar sus respuestas, configurar el pedido y
+      hacer las solicitudes correspondientes a los proveedores.
+</dd></dl>
+
+La especificación de los archivos de entrada (inventario, maquinas,
+pedido) y de los reportes es la misma que en el proyecto 1.
+
+<h2>Versión CP</h2>
+
+<p>
+Utiliza los mismos archivos y parámetros de configuración que el nivel
+avanzado del proyecto 1. Equivale a tomar el programa ya desarrollado
+con sockets y modificarlo para que utilice RPC. La consulta consiste a
+una llamada remota al proveedor, que responde con su disponibilidad y precio
+de los artículos especificados en la llamada. El pedido consiste en
+otra llamada remota al proveedor.
+
+</p><p>
+Los comandos para ejecutar el programa son similares a los del
+proyecto 1, salvo que no se especifica el puerto del servidor, que es
+escogido aleatoriamente por el asignador de puertos de <tt>portmap</tt>:
+</p><dl>
+  <dt> Cliente
+  </dt><dd> <pre>RPC-ordenes -f [archivo de pedidos] -d [proveedores] </pre>
+
+  </dd><dt> Servidor
+  </dt><dd> <pre>RPC-proveedor -f [archivo inventario]</pre>
+
+</dd></dl>
+
+<hr>
+
+<h2>Versión CL</h2>
+
+<p>
+Esta versión funciona igual que el Cliente Pesado, salvo que el
+componente Intermediario descarga al cliente de las tareas, quedando
+este responsable unicamente de la interacción con el usuario.
+</p><p>
+Los comandos para ejecutar el programa son los siguientes:
+</p><dl>
+  <dt> Cliente
+  </dt><dd> <pre>RPC-ordenes -f [archivo de pedidos] </pre>
+
+  </dd><dt> Intermediario
+  </dt><dd> <pre>RPC-inter -d [proveedores] </pre>
+
+  </dd><dt> Servidor
+  </dt><dd> <pre>RPC-proveedor -f [archivo inventario]</pre>
+
+</dd></dl>
+
+Todas las comunicaciones se realizan con llamadas a procedimientos
+remotos.<br>
+<b>Nótese que RPC-inter es a la vez cliente (de los
+RPC-proveedor) y servidor (de RPC-ordenes).</b> <br>
+En esta versión, el componente RPC-ordenes recibe el pedido y lo pasa
+al intermediario (RPC-inter). Luego, recibirá la respuesta que imprime
+en la pantalla. Su trabajo es interactuar con el usuario; en este
+caso, tanto la recepción de la entrada (pedido) como la presentación
+de los reportes, son muy sencillas.
+
+<hr>
+
+
+<h1 align="CENTER"><a name="Proyecto1sockets">1er Proyecto:
+Cliente-Servidor con sockets</a></h1> 
+
+<h2>Descripción general</h2>
+<p>La ferretería LA CADENA desea implementar un sistema de ayuda para
+la emisión de pedidos a sus proveedores. Este sistema debe asistir en
+la obtención del mejor precio posible para los artículos
+buscados. </p>
+
+<b></b><p><b>Ejemplo</b> Supóngase que se quiere adquirir
+5000 clavos de acero. El sistema debe consultar los sistemas de
+los proveedores, para saber cómo elaborar sus pedidos de manera de
+obtener el mejor precio para la operación. Esto implicará determinar
+cuál de los proveedores ofrece el mejor precio, y si éste es capaz de
+satisfacer el pedido. En caso de no poder hacerlo en su totalidad (por
+ejemplo, solo tiene 3000 clavos en su inventario), entonces debe
+obtener el restante del siguiente proveedor con el mejor precio, y así
+sucesivamente. </p>
+
+<p>El sistema tiene dos posibles salidas, una básica y otra
+avanzada. El nivel básico consiste en la consulta de la información de
+los proveedores. En el nivel avanzado, el sistema, adicionalmente,
+envía las peticiones de productos a los proveedores de acuerdo al
+resultado de la primera consulta. <br>  <br>  </p>
+
+<h3>Nivel básico: consulta</h3>
+
+<p>El sistema dará como salida un reporte en el que se indicará en
+cada línea: un producto, quién provee el producto, el precio unitario
+del producto, la cantidad solicitada y el precio total del pedido a
+ese proveedor. En el caso de que un producto sea suministrado por más
+de un proveedor (porque el que tenía el mejor precio no tiene tantos
+productos como dice la solicitud), la información debe aparecer en
+líneas consecutivas del reporte. Para facilitar su análisis el reporte
+debe estar ordenado por productos y en el mismo orden en el que
+aparecen en el archivo de entrada que se le suministra al cliente.
+
+</p><h4><a name="pedido">Ejemplo de archivo de pedidos</a></h4>
+<table cols="3" width="50%">
+  <tbody><tr>
+    <td>clavos de acero </td>  <td> &amp;  </td> <td>1000 </td> 
+  </tr>
+  <tr>
+    <td> alicate de presion</td> <td> &amp;  </td> <td>7 </td> 
+  </tr>
+  <tr>
+    <td> Bombillos 100Vatios</td> <td> &amp;  </td> <td> 30 </td> 
+  </tr>
+  <tr>
+    <td> Destornillador </td> <td> &amp;  </td> <td> 5 </td> 
+  </tr>
+  
+ </tbody></table>
+
+<h4>Ejemplo del reporte</h4>
+
+<p></p><table cols="5" width="80%" cellpadding="2" cellspacing="2">
+  <tbody><tr>
+    <td>CONSULTA</td>
+  </tr>
+  <tr>
+    <td>PRODUCTO</td> <td>PROVEEDOR</td> <td>CANTIDAD</td> <td>PRECIO
+	UN.</td> <td>COSTO TOTAL</td>   
+  </tr>
+<tr><td>clavos de acero </td> <td>MetalMax </td> <td>0.02 </td> <td>1000 </td> <td>20.00</td>  
+</tr><tr><td>alicate de presion</td> <td> Pretador C.A.</td> <td> 30.00</td> <td> 7 </td> <td>210.00</td> </tr> 
+<tr><td>Bombillos 100Vatios </td> <td>La Luz </td> <td>5.00</td> <td> 20 </td> <td>100.00</td> </tr> 
+<tr> <td>Bombillos 100Vatios</td> <td> La Noche</td> <td> 7.00 </td> <td>10</td> <td> 70.00</td> </tr> 
+<tr> <td>Destornillador</td> <td> Lo hago yo</td> <td> 12.00</td> <td> 5</td> <td> 60.00</td> </tr> 
+ <tr>  <td>TOTAL</td> <td> </td> <td></td> <td> </td> <td>  460.00</td>  </tr> 
+</tbody></table>
+
+<p>El reporte debe aparecer por pantalla, (por la salida estándar). <br>
+&nbsp; </p>
+<h3>Nivel avanzado: consulta y emisión de pedido</h3>
+<p><br>
+
+El sistema envía las peticiones a los proveedores y, si son aceptadas
+por los proveedores, responde con un reporte similar al mostrado en el
+nivel básico, pero que corresponde a los pedidos hechos. </p> 
+
+<p></p><table cols="5" width="80%" cellpadding="2" cellspacing="2">
+  <tbody><tr>
+    <td>PEDIDOS SOLICITADOS</td>
+  </tr>
+  <tr>
+    <td>PRODUCTO</td> <td>PROVEEDOR</td> <td>CANTIDAD</td> <td>PRECIO
+	UN.</td> <td>COSTO TOTAL</td>   
+  </tr>
+<tr><td>clavos de acero </td> <td>MetalMax </td> <td>0.02 </td> <td>1000 </td> <td>20.00</td>  
+</tr><tr><td>alicate de presion</td> <td> Pretador C.A.</td> <td> 30.00</td> <td> 7 </td> <td>210.00</td> </tr> 
+<tr><td>Bombillos 100Vatios </td> <td>La Luz </td> <td>5.00</td> <td> 20 </td> <td>100.00</td> </tr> 
+<tr> <td>Bombillos 100Vatios</td> <td> La Noche</td> <td> 7.00 </td> <td>10</td> <td> 70.00</td> </tr> 
+<tr> <td>Destornillador</td> <td> Lo hago yo</td> <td> 12.00</td> <td> 5</td> <td> 60.00</td> </tr> 
+ <tr>  <td>TOTAL</td> <td> </td> <td></td> <td> </td> <td>  460.00</td>  </tr> 
+</tbody></table>
+
+<p>Note que la diferencia con la consulta, es que el reporte reza
+"PEDIDOS SOLICITADOS" en lugar de "CONSULTA".
+
+</p><h2>Implementación Cliente-Servidor</h2>
+<h3>Cliente</h3>
+<p>El usuario proveerá un archivo de texto ("pedidos.txt") con los
+pedidos que desea consultar. Este archivo contiene un pedido por
+línea; cada pedido se especifica por el identificador del ítem (una
+cadena de caracteres) y la cantidad deseada (entero),
+separados por un "&amp;" (ver ejemplo <a href="http://ldc.usb.ve/~figueira/cursos/lab-redes/Proyectos/Proyecto2/#pedido">arriba</a>).
+
+</p><p>El cliente se invoca con el comando </p>
+<pre>ordenes -[a|b] -f [archivo de pedidos] -d [proveedores] </pre>
+<p>donde "<tt>a</tt>" indica nivel avanzado y "<tt>b</tt>" indica el
+nivel básico; el <tt>archivo de pedido</tt>s es el descrito en el
+párrafo anterior, <tt>proveedores</tt> es el nombre de un archivo que
+contiene en cada línea el nombre de un proveedor así como las
+direcciones (DNS) de la máquina donde corre su servicio y el número de
+puerto en el que corre el servicio en esa máquina, separados entre sí
+por un "&amp;".<br>
+Por ejemplo
+</p> 
+<pre>#Archivo de maquinas
+El Picoteo &amp; korba.ldc.usb.ve  &amp; 4356
+La Pala  &amp; lala.ldc.usb.ve  &amp; 7654 </pre>
+<p>
+<tt>puerto servidor</tt> es el puerto UDP/TCP del servidor. Para
+evitar conflictos, se usarán los últimos cinco dígitos del carnet de
+uno de los integrantes del equipo como número de puerto. </p> 
+<p>En el nivel avanzado del proyecto, una vez que el cliente ha
+consultado los sistemas de los proveedores, debe enviar una orden de
+pedido para cada producto al proveedor que ha seleccionado por su
+precio. La orden de pedido debe contener la siguiente información:
+<br> 
+Nombre del proveedor, nombre del producto solicitado, cantidad
+solicitada del producto. <br> 
+El cliente debe obtener del servidor un mensaje de respuesta
+indicándole si se puede servir el pedido o no. En el caso que el
+pedido no pueda ser servido por el proveedor seleccionado se pasa a
+hacer el pedido al proveedor con el siguiente mejor precio y si
+ninguno puede servir el pedido, pues no se pide el producto. </p>
+
+<h3>Servidor</h3>
+<p>En cada máquina, se ejecutará un demonio con el comando </p>
+<pre>proveedor -f [archivo inventario] -p [puerto]</pre>
+<p>Donde <tt>proveedor</tt> es el nombre del programa, y <tt>archivo
+inventario</tt> es el nombre de un archivo de texto que contendrá la
+información pertinente, con el formato: </p> 
+<pre>[nombre producto]&nbsp;&nbsp; [cantidad disponible]&nbsp;&nbsp; [precio unitario] 
+</pre>
+de tipo cadena de caracteres, entero y real,
+respectivamente. Cada uno de estos campos vendrá separado del
+siguiente por un " &amp;". Ejemplo: 
+<tt></tt><p><tt>clavos de acero &amp; 1000 &amp; 0.02</tt> <br>
+<tt>alicate de presion  &amp; 7  &amp; 30.00</tt> <br>
+<tt>bombillos 100Vatios  &amp; 10  &amp; 8.00</tt> </p>
+<p><tt>puerto</tt> es el número del puerto donde el servidor escuchará
+las peticiones de los clientes. </p> 
+<p>El programa proveedor debe proveer de toda la funcionalidad
+necesaria para atender las peticiones que genere la ferretería LA
+CADENA, o cualquiera otra que emplee el mismo programa que ésta. </p> 
+<p>Para efectos de corrección del proyecto el programa servidor debe
+mostrar por la salida estándar toda la información que reciba del
+cliente, de forma de poder verificar fácilmente el flujo de
+información que intercambia con el cliente, <font color="#FF0000#">así
+como el estado del inventario en el caso de servir un pedido (nivel
+avanzado)</font> <br>  
+&nbsp; </p>
+
+
+<h2>Evaluación</h2>
+<ul>
+  <li>Este proyecto corresponde a 15% de la nota del curso. El proyecto
+que se entregue debe funcionar correctamente. Si no corre no será
+evaluado.
+  </li><li> Habrá al menos un punto de control, sin nota pero obligatorio.
+</li><li>Existen varias modalidades de entrega. Un proyecto con únicamente
+el nivel básico será evaluado en base a 70% de la nota. Si se
+implementa además el nivel avanzado, entonces se evaluará sobre
+100%.
+
+
+</li><li>Las especificaciones de la entrega serán publicadas oportunamente. 
+
+</li><li>Para su evaluación el proyecto será probado con un conjunto de
+datos que serán establecidos en el momento de la corrección, no 
+necesariamente los que fueron suministrados como ejemplo. 
+</li><li>Otros detalles de la entrega, así como archivos de prueba, serán
+publicados oportunamente. 
+
+</li></ul>
+<h2>Observaciones</h2>
+
+<ul>
+  <li>Para el nivel básico y el nivel avanzado descritos antes se asume
+que no hay uso concurrente del sistema. Es decir, que sólo hay un
+cliente interactuando con los proveedores simultáneamente. Una de las
+consecuencias de esta restricción es que no habrá modificación de los
+archivos de los proveedores entre la consulta y la emisión de los
+pedidos, garantizándose que los pedidos serán aceptados por los
+proveedores. Las estructuras de datos se mantendrán actualizadas sólo
+en la memoria.
+<!-- <P>El proyecto podr&iacute;a extenderse para manejar accesos -->
+<!-- concurrentes. Esto ser&aacute; evaluado como puntos extras (hasta 10 puntos -->
+<!-- sobre la nota total del laboratorio). Existen varias posibilidades -->
+<!-- para el manejo de la concurrencia. Por ejemplo, podr&iacute;a tratarse -->
+<!-- como&nbsp; "transacciones", de manera de garantizar la consistencia -->
+<!-- entre la consulta y el pedido, o el uso de locks, etc. </P>  -->
+ </li><li>El programa debe correr en las máquinas del LDC.
+ </li>
+ <li>La implementación se hará con sockets. </li>
+ <li>Los formatos, nombres de los comandos, etc., deberán ser
+estrictamente los especificados aquí. </li>
+ <li>Por simplicidad de los
+proyectos se pide que no se implemente ningún tipo de interfaz
+gráfica, que se emplee la línea de comandos para invocar a los
+programas y la salida estándar para cualquier información que se desee
+reportar. </li>
+ <li>El no seguir las instrucciones puede acarrear penalizaciones.
+<h3><a name="NuevasObs">Agregadas 1 de octubre</a> </h3>
+
+ </li>
+ <li> El proyecto debería ser programado usando TCP. Si alguien desea
+      hacerlo con UDP puede hacerlo, pero para esta aplicación no es
+      lo más conveniente.
+  </li><li>Cada grupo debe decidir qué tipo de servidor usará (iterativo o
+      concurrente, con o sin estado) y justificarlo.
+  </li><li>Asumiremos que las máquinas tienen la misma arquitectura (intel
+  o amd), por lo tanto, no es necesario preocuparse por la
+  representacion de datos en cada máquina
+</li></ul>
+ 
+<h2>Ayuda</h2>
+
+Para efectos de desarrollo puede utilizarse una máquina para correr
+todos los componentes (cliente y varios servidores). Para ello, debe
+ejecutarse una instancia del servidor por cada proveedor, usando un
+archivo de inventario y un puerto diferente para cada uno; y un
+archivo "proveedores" como el siguiente:
+<p></p> 
+<pre>#Archivo de maquinas
+El Picoteo &amp; localhost &amp; 4356
+La Pala &amp; localhost &amp; 7654 </pre>
+<p>
+
+Una vez funcione en una máquina, debe probarlo en al menos dos máquina
+(una con un cliente y un proveedor, y un proveedor en otra máquina)
+para verificar que funcione bien. <b>La corrección se hará usando varias
+máquinas. </b>
+</p><p></p><hr><p></p>
+<address>
+Carlos Figueira<br>
+<!-- hhmts start -->
+Última modificación: Fri Oct 19 11:53:11 VET 2012
+<!-- hhmts end -->
+</address>
+
+</body></html>

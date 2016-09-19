@@ -1,0 +1,10 @@
+Tornillo & 900
+Martillo & 8
+Tuerca & 50
+Tubo & 5
+Taladro & 1
+Clavo & 5000
+Alicate & 4
+Bombillo & 3000
+Destornillador & 7
+Fregadero & 1000
